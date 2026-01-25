@@ -16,6 +16,7 @@ import { Layout } from './layout';
 import { OrderInfo } from '../order-info';
 import { Modal } from '../modal';
 import { IngredientDetails } from '../ingredient-details';
+import { ProtectedRoute } from './ProtectedRoute';
 
 const router = createBrowserRouter([
   {
@@ -42,34 +43,60 @@ const router = createBrowserRouter([
       },
       {
         path: '/login',
-        element: <Login />
+        element: (
+          <ProtectedRoute withoutAuth>
+            <Login />
+          </ProtectedRoute>
+        )
       },
       {
         path: '/register',
-        element: <Register />
+        element: (
+          <ProtectedRoute withoutAuth>
+            <Register />
+          </ProtectedRoute>
+        )
       },
       {
         path: '/forgot-password',
-        element: <ForgotPassword />
+        element: (
+          <ProtectedRoute withoutAuth>
+            <ForgotPassword />
+          </ProtectedRoute>
+        )
       },
       {
         path: '/reset-password',
-        element: <ResetPassword />
+        element: (
+          <ProtectedRoute withoutAuth>
+            <ResetPassword />
+          </ProtectedRoute>
+        )
       },
       {
         path: '/profile',
-        element: <Profile />,
+        element: (
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        ),
         children: [
           {
             path: '/profile/orders',
-            element: <ProfileOrders />,
+            element: (
+              <ProtectedRoute>
+                <ProfileOrders />
+              </ProtectedRoute>
+            ),
             children: [
               {
                 path: '/profile/orders/:number',
                 element: (
-                  <Modal title='Информация о заказе' onClose={() => {}}>
-                    <OrderInfo />
-                  </Modal>
+                  <ProtectedRoute>
+                    <Modal title='Информация о заказе' onClose={() => {}}>
+                      <OrderInfo />
+                    </Modal>
+                  </ProtectedRoute>
                 )
               }
             ]
