@@ -47,6 +47,7 @@ export const burgerConstructorSlice = createSlice({
         state.items.ingredients[payload + 1],
         state.items.ingredients[payload]
       );
-    }
+    },
+    reset: () => initialState
   }
 });

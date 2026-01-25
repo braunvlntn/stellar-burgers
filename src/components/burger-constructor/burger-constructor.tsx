@@ -5,18 +5,28 @@ import { useSelector } from 'react-redux';
 import { selectConstructorItems } from '../../services/constructor/selectors';
 import { selectUser } from '../../services/user/selectors';
 import { createSearchParams, useNavigate } from 'react-router-dom';
+import { useDispatch } from '../../services/store';
+import { fetchOrder } from '../../services/order/thunks';
+import {
+  selectOrderModalData,
+  selectOrderRequest
+} from '../../services/order/selectors';
+import { orderSlice } from '../../services/order/slice';
+import { burgerConstructorSlice } from '../../services/constructor/slice';
 
 export const BurgerConstructor: FC = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const constructorItems = useSelector(selectConstructorItems);
   const user = useSelector(selectUser);
 
-  const orderRequest = false;
+  const orderRequest = useSelector(selectOrderRequest);
+  console.log(orderRequest);
 
-  const orderModalData = null;
+  const orderModalData = useSelector(selectOrderModalData);
 
-  const onOrderClick = () => {
+  const onOrderClick = async () => {
     if (!user) {
       navigate({
         pathname: '/login',
@@ -27,8 +37,25 @@ export const BurgerConstructor: FC = () => {
     }
 
     if (!constructorItems.bun || orderRequest) return;
+
+    const ids = [
+      constructorItems.bun?._id,
+      constructorItems.bun?._id,
+      ...constructorItems.ingredients.map((ingredient) => ingredient._id)
+    ];
+
+    const response = await dispatch(fetchOrder(ids));
+
+    if (!response.payload) {
+      return;
+    }
+
+    dispatch(burgerConstructorSlice.actions.reset());
   };
-  const closeOrderModal = () => {};
+
+  const closeOrderModal = () => {
+    dispatch(orderSlice.actions.reset());
+  };
 
   const price = useMemo(
     () =>
