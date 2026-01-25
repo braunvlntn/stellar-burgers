@@ -22,7 +22,6 @@ export const BurgerConstructor: FC = () => {
   const user = useSelector(selectUser);
 
   const orderRequest = useSelector(selectOrderRequest);
-  console.log(orderRequest);
 
   const orderModalData = useSelector(selectOrderModalData);
 
