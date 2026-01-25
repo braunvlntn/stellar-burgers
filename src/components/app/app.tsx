@@ -1,23 +1,23 @@
 import { ConstructorPage, NotFound404 } from '@pages';
 import '../../index.css';
-import styles from './app.module.css';
 
-import { AppHeader } from '@components';
-import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { Layout } from './layout';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <ConstructorPage />,
-    errorElement: <NotFound404 />
+    element: <Layout />,
+    errorElement: <NotFound404 />,
+    children: [
+      {
+        path: '/',
+        element: <ConstructorPage />
+      }
+    ]
   }
 ]);
 
-const App = () => (
-  <div className={styles.app}>
-    <AppHeader />
-    <RouterProvider router={router} />
-  </div>
-);
+const App = () => <RouterProvider router={router} />;
 
 export default App;
