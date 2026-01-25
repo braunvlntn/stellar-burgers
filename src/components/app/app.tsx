@@ -78,11 +78,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/ingredients/:id',
-        element: (
-          <Modal title='Ингредиенты' onClose={() => {}}>
-            <IngredientDetails />
-          </Modal>
-        )
+        element: <IngredientDetails />
       },
       {
         path: '*',
