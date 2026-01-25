@@ -2,22 +2,22 @@ import { createSlice } from '@reduxjs/toolkit';
 import { fetchIngredients } from './thunks';
 import { TIngredient } from '@utils-types';
 
-interface rootSliceState {
+interface IngredientsSliceState {
   buns: TIngredient[];
   mains: TIngredient[];
   sauces: TIngredient[];
   loading: boolean;
 }
 
-const initialState: rootSliceState = {
+const initialState: IngredientsSliceState = {
   buns: [],
   mains: [],
   sauces: [],
   loading: false
 };
 
-export const rootSlice = createSlice({
-  name: 'root',
+export const ingredientsSlice = createSlice({
+  name: 'ingredients',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
