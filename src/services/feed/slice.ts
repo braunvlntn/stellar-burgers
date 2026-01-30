@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { TOrder } from '@utils-types';
 import { fetchFeed } from './thunks';
 
@@ -9,24 +9,17 @@ interface FeedSliceState {
     total: number;
     totalToday: number;
   } | null;
-  order: TOrder | null;
 }
 
 const initialState: FeedSliceState = {
   loading: false,
-  data: null,
-  order: null
+  data: null
 };
 
 export const feedSlice = createSlice({
   name: 'feed',
   initialState,
-  reducers: {
-    setOrder: (state, { payload }: PayloadAction<FeedSliceState['order']>) => {
-      state.order = payload;
-    },
-    reset: () => initialState
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder.addCase(fetchFeed.pending, (state) => {
       state.loading = true;

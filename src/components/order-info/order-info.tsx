@@ -1,15 +1,47 @@
-import { FC, useMemo } from 'react';
+import { FC, useEffect, useMemo } from 'react';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
-import { useSelector } from '../../services/store';
-import { selectIngredients } from '../../services/ingredients/selectors';
-import { selectOrder } from '../../services/feed/selectors';
+import { useDispatch, useSelector } from '../../services/store';
+import {
+  selectIngredients,
+  selectLoading
+} from '../../services/ingredients/selectors';
+import {
+  selectFeedData,
+  selectFeedLoading
+} from '../../services/feed/selectors';
+import { useNavigate, useParams } from 'react-router-dom';
+import { fetchIngredients } from '../../services/ingredients/thunks';
+import { fetchFeed } from '../../services/feed/thunks';
+import { Modal } from '../modal';
 
 export const OrderInfo: FC = () => {
-  const orderData = useSelector(selectOrder);
+  const dispatch = useDispatch();
+  const { number } = useParams();
+  const navigate = useNavigate();
+
+  const feed = useSelector(selectFeedData);
+  const feedLoading = useSelector(selectFeedLoading);
+
+  const orderData = feed?.orders.find(
+    (order) => order.number === Number(number)
+  );
 
   const ingredients: TIngredient[] = useSelector(selectIngredients);
+  const ingredientsLoading = useSelector(selectLoading);
+
+  useEffect(() => {
+    if (!ingredients.length && !ingredientsLoading) {
+      dispatch(fetchIngredients());
+    }
+  }, [ingredients, ingredientsLoading]);
+
+  useEffect(() => {
+    if (!feed && !feedLoading) {
+      dispatch(fetchFeed());
+    }
+  }, [feed, feedLoading]);
 
   /* Готовим данные для отображения */
   const orderInfo = useMemo(() => {
@@ -53,9 +85,18 @@ export const OrderInfo: FC = () => {
     };
   }, [orderData, ingredients]);
 
-  if (!orderInfo) {
+  if (!orderInfo || !ingredients.length || ingredientsLoading || feedLoading) {
     return <Preloader />;
   }
 
-  return <OrderInfoUI orderInfo={orderInfo} />;
+  return (
+    <Modal
+      title={`Заказ ${orderInfo.number}`}
+      onClose={() => {
+        navigate('/feed');
+      }}
+    >
+      <OrderInfoUI orderInfo={orderInfo} />
+    </Modal>
+  );
 };
