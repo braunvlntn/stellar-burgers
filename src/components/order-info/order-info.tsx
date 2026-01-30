@@ -11,7 +11,7 @@ import {
   selectFeedData,
   selectFeedLoading
 } from '../../services/feed/selectors';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { fetchIngredients } from '../../services/ingredients/thunks';
 import { fetchFeed } from '../../services/feed/thunks';
 import { Modal } from '../modal';
@@ -20,14 +20,13 @@ export const OrderInfo: FC = () => {
   const dispatch = useDispatch();
   const { number } = useParams();
   const navigate = useNavigate();
-
   const feed = useSelector(selectFeedData);
   const feedLoading = useSelector(selectFeedLoading);
-
+  const location = useLocation();
   const orderData = feed?.orders.find(
     (order) => order.number === Number(number)
   );
-
+  console.log(location);
   const ingredients: TIngredient[] = useSelector(selectIngredients);
   const ingredientsLoading = useSelector(selectLoading);
 
@@ -93,7 +92,7 @@ export const OrderInfo: FC = () => {
     <Modal
       title={`Заказ ${orderInfo.number}`}
       onClose={() => {
-        navigate('/feed');
+        navigate(location.pathname.split('/').slice(0, -1).join('/'));
       }}
     >
       <OrderInfoUI orderInfo={orderInfo} />
