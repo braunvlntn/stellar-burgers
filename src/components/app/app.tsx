@@ -29,17 +29,11 @@ const router = createBrowserRouter([
       },
       {
         path: '/feed',
-        element: <Feed />,
-        children: [
-          {
-            path: '/feed:number',
-            element: (
-              <Modal title='Информация о заказе' onClose={() => {}}>
-                <OrderInfo />
-              </Modal>
-            )
-          }
-        ]
+        element: <Feed />
+      },
+      {
+        path: '/feed/:number',
+        element: <OrderInfo />
       },
       {
         path: '/login',
@@ -79,29 +73,25 @@ const router = createBrowserRouter([
           <ProtectedRoute>
             <Profile />
           </ProtectedRoute>
-        ),
-        children: [
-          {
-            path: '/profile/orders',
-            element: (
-              <ProtectedRoute>
-                <ProfileOrders />
-              </ProtectedRoute>
-            ),
-            children: [
-              {
-                path: '/profile/orders/:number',
-                element: (
-                  <ProtectedRoute>
-                    <Modal title='Информация о заказе' onClose={() => {}}>
-                      <OrderInfo />
-                    </Modal>
-                  </ProtectedRoute>
-                )
-              }
-            ]
-          }
-        ]
+        )
+      },
+      {
+        path: '/profile/orders',
+        element: (
+          <ProtectedRoute>
+            <ProfileOrders />
+          </ProtectedRoute>
+        )
+      },
+      {
+        path: '/profile/orders/:number',
+        element: (
+          <ProtectedRoute>
+            <Modal title='Информация о заказе' onClose={() => {}}>
+              <OrderInfo />
+            </Modal>
+          </ProtectedRoute>
+        )
       },
       {
         path: '/ingredients/:id',
