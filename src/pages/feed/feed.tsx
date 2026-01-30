@@ -26,7 +26,7 @@ export const Feed: FC = () => {
     if (!ingredients.length && !ingredientsLoading) {
       dispatch(fetchIngredients());
     }
-  }, [ingredients]);
+  }, [ingredients, ingredientsLoading]);
 
   useEffect(() => {
     if (!orders.length && !feedLoading) {
