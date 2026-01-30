@@ -14,7 +14,6 @@ import '../../index.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Layout } from './layout';
 import { OrderInfo } from '../order-info';
-import { Modal } from '../modal';
 import { IngredientDetails } from '../ingredient-details';
 import { ProtectedRoute } from './ProtectedRoute';
 
@@ -87,9 +86,7 @@ const router = createBrowserRouter([
         path: '/profile/orders/:number',
         element: (
           <ProtectedRoute>
-            <Modal title='Информация о заказе' onClose={() => {}}>
-              <OrderInfo />
-            </Modal>
+            <OrderInfo />
           </ProtectedRoute>
         )
       },
