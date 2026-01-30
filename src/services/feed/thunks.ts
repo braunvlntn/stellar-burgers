@@ -10,7 +10,7 @@ export const fetchFeed = createAsyncThunk<
   },
   void,
   { rejectValue: null }
->('fetchFeed', async (ids, { rejectWithValue }) => {
+>('fetchFeed', async (_, { rejectWithValue }) => {
   try {
     return await getFeedsApi();
   } catch (e) {
