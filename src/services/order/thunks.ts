@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { orderBurgerApi } from '@api';
+import { getOrdersApi, orderBurgerApi } from '@api';
 import { TOrder } from '@utils-types';
 
 export const fetchOrder = createAsyncThunk<
@@ -11,6 +11,18 @@ export const fetchOrder = createAsyncThunk<
     const response = await orderBurgerApi(ids);
 
     return response.order;
+  } catch (e) {
+    return rejectWithValue(null);
+  }
+});
+
+export const fetchUserOrders = createAsyncThunk<
+  TOrder[],
+  void,
+  { rejectValue: null }
+>('fetchUserOrders', async (_, { rejectWithValue }) => {
+  try {
+    return await getOrdersApi();
   } catch (e) {
     return rejectWithValue(null);
   }
