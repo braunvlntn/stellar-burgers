@@ -1,5 +1,11 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { loginUserApi, registerUserApi, TLoginData, TRegisterData } from '@api';
+import {
+  loginUserApi,
+  registerUserApi,
+  logoutApi,
+  TLoginData,
+  TRegisterData
+} from '@api';
 import { TUser } from '@utils-types';
 
 export const fetchLogin = createAsyncThunk<
@@ -41,3 +47,12 @@ export const fetchRegistration = createAsyncThunk<
     return rejectWithValue(null);
   }
 });
+
+export const fetchLogout = createAsyncThunk<void, void>(
+  'fetchLogout',
+  async () => {
+    try {
+      await logoutApi();
+    } catch {}
+  }
+);

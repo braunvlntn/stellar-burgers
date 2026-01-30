@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { TUser } from '@utils-types';
 import { fetchLogin } from './thunks';
 import { fetchRegistration } from './thunks';
+import { fetchLogout } from './thunks';
 
 interface UserSliceState {
   user: TUser | null;
@@ -38,6 +39,16 @@ export const userSlice = createSlice({
       state.loading = false;
     });
     builder.addCase(fetchRegistration.rejected, (state) => {
+      state.loading = false;
+    });
+    builder.addCase(fetchLogout.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(fetchLogout.fulfilled, (state) => {
+      state.user = null;
+      state.loading = false;
+    });
+    builder.addCase(fetchLogout.rejected, (state) => {
       state.loading = false;
     });
   }
