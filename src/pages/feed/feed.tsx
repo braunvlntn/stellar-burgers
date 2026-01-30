@@ -8,20 +8,38 @@ import {
   selectFeedLoading
 } from '../../services/feed/selectors';
 import { fetchFeed } from '../../services/feed/thunks';
+import {
+  selectIngredients,
+  selectLoading
+} from '../../services/ingredients/selectors';
+import { fetchIngredients } from '../../services/ingredients/thunks';
 
 export const Feed: FC = () => {
   const dispatch = useDispatch();
 
-  const loading = useSelector(selectFeedLoading);
+  const feedLoading = useSelector(selectFeedLoading);
+  const ingredientsLoading = useSelector(selectLoading);
   const orders: TOrder[] = useSelector(selectFeedData)?.orders || [];
+  const ingredients = useSelector(selectIngredients);
 
   useEffect(() => {
-    if (!orders.length) {
+    if (!ingredients.length && !ingredientsLoading) {
+      dispatch(fetchIngredients());
+    }
+  }, [ingredients]);
+
+  useEffect(() => {
+    if (!orders.length && !feedLoading) {
       dispatch(fetchFeed());
     }
-  }, []);
+  }, [orders, feedLoading]);
 
-  if (!orders.length || loading) {
+  if (
+    !orders.length ||
+    feedLoading ||
+    !ingredients.length ||
+    ingredientsLoading
+  ) {
     return <Preloader />;
   }
 
