@@ -7,16 +7,22 @@ import { BurgerConstructor } from '../../components';
 import { Preloader } from '../../components/ui';
 import { FC, useEffect } from 'react';
 import { fetchIngredients } from '../../services/ingredients/thunks';
-import { selectLoading } from '../../services/ingredients/selectors';
+import {
+  selectIngredients,
+  selectLoading
+} from '../../services/ingredients/selectors';
 
 export const ConstructorPage: FC = () => {
   const dispatch = useDispatch();
 
   const isIngredientsLoading = useSelector(selectLoading);
+  const ingredients = useSelector(selectIngredients);
 
   useEffect(() => {
-    dispatch(fetchIngredients());
-  }, []);
+    if (!ingredients?.length && !isIngredientsLoading) {
+      dispatch(fetchIngredients());
+    }
+  }, [ingredients, isIngredientsLoading]);
 
   return (
     <>
