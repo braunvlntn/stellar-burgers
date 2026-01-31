@@ -2,7 +2,7 @@ import { FC, useEffect, useMemo } from 'react';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
-import { useDispatch, useSelector } from '../../services/store';
+import { useSelector } from '../../services/store';
 import {
   selectIngredients,
   selectLoading
@@ -11,35 +11,27 @@ import {
   selectFeedData,
   selectFeedLoading
 } from '../../services/feed/selectors';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { fetchIngredients } from '../../services/ingredients/thunks';
-import { fetchFeed } from '../../services/feed/thunks';
-import { Modal } from '../modal';
+import { useParams } from 'react-router-dom';
+import { selectUserOrders } from '../../services/order/selectors';
 
-export const OrderInfo: FC = () => {
-  const dispatch = useDispatch();
+export const OrderInfo: FC<{
+  setTitle?: (title: string) => void;
+}> = ({ setTitle }) => {
   const { number } = useParams();
-  const navigate = useNavigate();
   const feed = useSelector(selectFeedData);
+  const userOrders = useSelector(selectUserOrders);
   const feedLoading = useSelector(selectFeedLoading);
-  const location = useLocation();
-  const orderData = feed?.orders.find(
-    (order) => order.number === Number(number)
-  );
+  const orderData =
+    feed?.orders.find((order) => order.number === Number(number)) ||
+    userOrders.find((order) => order.number === Number(number));
   const ingredients: TIngredient[] = useSelector(selectIngredients);
   const ingredientsLoading = useSelector(selectLoading);
 
   useEffect(() => {
-    if (!ingredients.length && !ingredientsLoading) {
-      dispatch(fetchIngredients());
+    if (orderData) {
+      setTitle?.(`Заказ ${orderData.number}`);
     }
-  }, [ingredients, ingredientsLoading]);
-
-  useEffect(() => {
-    if (!feed && !feedLoading) {
-      dispatch(fetchFeed());
-    }
-  }, [feed, feedLoading]);
+  }, [orderData]);
 
   /* Готовим данные для отображения */
   const orderInfo = useMemo(() => {
@@ -87,14 +79,5 @@ export const OrderInfo: FC = () => {
     return <Preloader />;
   }
 
-  return (
-    <Modal
-      title={`Заказ ${orderInfo.number}`}
-      onClose={() => {
-        navigate(location.pathname.split('/').slice(0, -1).join('/'));
-      }}
-    >
-      <OrderInfoUI orderInfo={orderInfo} />
-    </Modal>
-  );
+  return <OrderInfoUI orderInfo={orderInfo} />;
 };

@@ -1,5 +1,6 @@
 import { ProfileOrdersUI } from '@ui-pages';
 import { FC, useEffect } from 'react';
+import { Outlet } from 'react-router-dom';
 import { useDispatch, useSelector } from '../../services/store';
 import { selectUserOrders } from '../../services/order/selectors';
 import { fetchUserOrders } from '../../services/order/thunks';
@@ -18,5 +19,10 @@ export const ProfileOrders: FC = () => {
     dispatch(fetchUserOrders());
   }, []);
 
-  return <ProfileOrdersUI orders={orders} />;
+  return (
+    <>
+      <ProfileOrdersUI orders={orders} />
+      <Outlet />
+    </>
+  );
 };

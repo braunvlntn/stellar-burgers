@@ -13,7 +13,7 @@ import '../../index.css';
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Layout } from './layout';
-import { OrderInfo } from '../order-info';
+import { OrderInfoWrapper } from '../order-info';
 import { IngredientDetails } from '../ingredient-details';
 import { ProtectedRoute } from './ProtectedRoute';
 
@@ -24,15 +24,23 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <ConstructorPage />
+        element: <ConstructorPage />,
+        children: [
+          {
+            path: 'ingredients/:id',
+            element: <IngredientDetails />
+          }
+        ]
       },
       {
         path: '/feed',
-        element: <Feed />
-      },
-      {
-        path: '/feed/:number',
-        element: <OrderInfo />
+        element: <Feed />,
+        children: [
+          {
+            path: ':number',
+            element: <OrderInfoWrapper />
+          }
+        ]
       },
       {
         path: '/login',
@@ -80,15 +88,17 @@ const router = createBrowserRouter([
           <ProtectedRoute>
             <ProfileOrders />
           </ProtectedRoute>
-        )
-      },
-      {
-        path: '/profile/orders/:number',
-        element: (
-          <ProtectedRoute>
-            <OrderInfo />
-          </ProtectedRoute>
-        )
+        ),
+        children: [
+          {
+            path: ':number',
+            element: (
+              <ProtectedRoute>
+                <OrderInfoWrapper />
+              </ProtectedRoute>
+            )
+          }
+        ]
       },
       {
         path: '/ingredients/:id',

@@ -6,6 +6,7 @@ import { BurgerIngredients } from '../../components';
 import { BurgerConstructor } from '../../components';
 import { Preloader } from '../../components/ui';
 import { FC, useEffect } from 'react';
+import { Outlet } from 'react-router-dom';
 import { fetchIngredients } from '../../services/ingredients/thunks';
 import {
   selectIngredients,
@@ -41,6 +42,7 @@ export const ConstructorPage: FC = () => {
           </div>
         </main>
       )}
+      <Outlet />
     </>
   );
 };

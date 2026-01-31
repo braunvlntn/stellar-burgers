@@ -2,6 +2,7 @@ import { Preloader } from '@ui';
 import { FeedUI } from '@ui-pages';
 import { TOrder } from '@utils-types';
 import { FC, useEffect } from 'react';
+import { Outlet } from 'react-router-dom';
 import { useDispatch, useSelector } from '../../services/store';
 import {
   selectFeedData,
@@ -44,6 +45,9 @@ export const Feed: FC = () => {
   }
 
   return (
-    <FeedUI orders={orders} handleGetFeeds={() => dispatch(fetchFeed())} />
+    <>
+      <FeedUI orders={orders} handleGetFeeds={() => dispatch(fetchFeed())} />
+      <Outlet />
+    </>
   );
 };
