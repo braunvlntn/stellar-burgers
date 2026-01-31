@@ -26,7 +26,6 @@ export const OrderInfo: FC = () => {
   const orderData = feed?.orders.find(
     (order) => order.number === Number(number)
   );
-  console.log(location);
   const ingredients: TIngredient[] = useSelector(selectIngredients);
   const ingredientsLoading = useSelector(selectLoading);
 
