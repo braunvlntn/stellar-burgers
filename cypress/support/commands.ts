@@ -35,7 +35,16 @@ export {};
 Cypress.Commands.add('login', () => {
   cy.window().then((win) => {
     win.localStorage.setItem('refreshToken', 'mock-refresh-token');
-    win.document.cookie = 'accessToken=mock-access-token; path=/';
+
+    const expires = new Date();
+    expires.setDate(expires.getDate() + 1); // Срок действия 1 день
+
+    const cookieValue = 'mock-access-token';
+    const cookieString = `accessToken=${encodeURIComponent(cookieValue)}; path=/; expires=${expires.toUTCString()}`;
+
+    win.document.cookie = cookieString;
+
+    console.log('Cookie set:', win.document.cookie);
   });
 });
 
@@ -59,5 +68,8 @@ Cypress.Commands.add('mockUserAndOrder', () => {
   );
   cy.intercept('POST', '**/auth/login', { fixture: 'user.json' }).as(
     'loginRequest'
+  );
+  cy.intercept('GET', '**/auth/user', { fixture: 'user.json' }).as(
+    'getUserRequest'
   );
 });

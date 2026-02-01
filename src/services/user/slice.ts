@@ -4,6 +4,7 @@ import { fetchLogin } from './thunks';
 import { fetchRegistration } from './thunks';
 import { fetchLogout } from './thunks';
 import { fetchUpdateUser } from './thunks';
+import { fetchUser } from './thunks';
 
 interface UserSliceState {
   user: TUser | null;
@@ -60,6 +61,16 @@ export const userSlice = createSlice({
       state.loading = false;
     });
     builder.addCase(fetchUpdateUser.rejected, (state) => {
+      state.loading = false;
+    });
+    builder.addCase(fetchUser.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(fetchUser.fulfilled, (state, { payload }) => {
+      state.user = payload;
+      state.loading = false;
+    });
+    builder.addCase(fetchUser.rejected, (state) => {
       state.loading = false;
     });
   }

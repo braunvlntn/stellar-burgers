@@ -4,6 +4,7 @@ import {
   registerUserApi,
   logoutApi,
   updateUserApi,
+  getUserApi,
   TLoginData,
   TRegisterData
 } from '@api';
@@ -74,6 +75,20 @@ export const fetchUpdateUser = createAsyncThunk<
       return rejectWithValue(message);
     }
 
+    return rejectWithValue(null);
+  }
+});
+
+export const fetchUser = createAsyncThunk<
+  TUser,
+  void,
+  { rejectValue: null | string }
+>('fetchUser', async (_, { rejectWithValue }) => {
+  try {
+    const response = await getUserApi();
+
+    return response.user;
+  } catch {
     return rejectWithValue(null);
   }
 });

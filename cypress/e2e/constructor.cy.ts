@@ -93,8 +93,10 @@ describe('конструктор бургера', () => {
     beforeEach(() => {
       cy.mockIngredients();
       cy.mockUserAndOrder();
+      cy.login();
       cy.visit('/');
       cy.wait('@getIngredients');
+      cy.wait('@getUserRequest');
     });
 
     after(() => {
@@ -117,19 +119,6 @@ describe('конструктор бургера', () => {
         .parents('li')
         .find('button')
         .click();
-
-      cy.get('button').contains('Оформить заказ').click();
-
-      cy.url().should('include', '/login');
-
-      cy.get('input[name="email"]').type('test_user@example.com');
-      cy.get('input[name="password"]').type('test_user_password');
-
-      cy.get('button').contains('Войти').click();
-
-      cy.wait('@loginRequest');
-
-      cy.url().should('not.include', '/login');
 
       cy.get('button').contains('Оформить заказ').click();
 

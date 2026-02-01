@@ -3,7 +3,8 @@ import {
   fetchLogin,
   fetchRegistration,
   fetchLogout,
-  fetchUpdateUser
+  fetchUpdateUser,
+  fetchUser
 } from './thunks';
 import { TUser } from '@utils-types';
 
@@ -219,6 +220,52 @@ describe('userSlice', () => {
 
       expect(result.loading).toBe(false);
       expect(result.user).toEqual(mockUser);
+    });
+  });
+
+  describe('получение пользователя', () => {
+    test('fetchUser.pending', () => {
+      const initialState = {
+        user: null,
+        loading: false
+      };
+
+      const result = userSlice.reducer(
+        initialState,
+        fetchUser.pending('', undefined)
+      );
+
+      expect(result.loading).toBe(true);
+    });
+
+    test('fetchUser.fulfilled', () => {
+      const initialState = {
+        user: null,
+        loading: true
+      };
+
+      const result = userSlice.reducer(
+        initialState,
+        fetchUser.fulfilled(mockUser, '', undefined)
+      );
+
+      expect(result.loading).toBe(false);
+      expect(result.user).toEqual(mockUser);
+    });
+
+    test('fetchUser.rejected', () => {
+      const initialState = {
+        user: null,
+        loading: true
+      };
+
+      const result = userSlice.reducer(
+        initialState,
+        fetchUser.rejected(null, '', undefined)
+      );
+
+      expect(result.loading).toBe(false);
+      expect(result.user).toEqual(null);
     });
   });
 });
