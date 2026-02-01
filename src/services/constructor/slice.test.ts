@@ -74,4 +74,39 @@ describe('burgerConstructorSlice', () => {
     expect(result.items.ingredients).toHaveLength(1);
     expect(result.items.ingredients[0].id).toBe('test-id-2');
   });
+
+  test('перемещение ингредиентов', () => {
+    const ingredient1 = { ...mockIngredient, id: 'test-id-1' };
+    const ingredient2 = { ...mockIngredient, id: 'test-id-2' };
+    const ingredient3 = { ...mockIngredient, id: 'test-id-3' };
+
+    const initialState = {
+      items: {
+        bun: null,
+        ingredients: [ingredient1, ingredient2, ingredient3]
+      }
+    };
+
+    let result = burgerConstructorSlice.reducer(
+      initialState,
+      burgerConstructorSlice.actions.moveUp(1)
+    );
+
+    expect(result.items.ingredients).toEqual([
+      ingredient2,
+      ingredient1,
+      ingredient3
+    ]);
+
+    result = burgerConstructorSlice.reducer(
+      result,
+      burgerConstructorSlice.actions.moveDown(1)
+    );
+
+    expect(result.items.ingredients).toEqual([
+      ingredient2,
+      ingredient3,
+      ingredient1
+    ]);
+  });
 });
