@@ -1,15 +1,29 @@
-import { useSelector } from '../../services/store';
+import { RootState, useDispatch, useSelector } from '../../services/store';
 
 import styles from './constructor-page.module.css';
 
 import { BurgerIngredients } from '../../components';
 import { BurgerConstructor } from '../../components';
 import { Preloader } from '../../components/ui';
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
+import { Outlet } from 'react-router-dom';
+import { fetchIngredients } from '../../services/ingredients/thunks';
+import {
+  selectIngredients,
+  selectLoading
+} from '../../services/ingredients/selectors';
 
 export const ConstructorPage: FC = () => {
-  /** TODO: взять переменную из стора */
-  const isIngredientsLoading = false;
+  const dispatch = useDispatch();
+
+  const isIngredientsLoading = useSelector(selectLoading);
+  const ingredients = useSelector(selectIngredients);
+
+  useEffect(() => {
+    if (!ingredients?.length && !isIngredientsLoading) {
+      dispatch(fetchIngredients());
+    }
+  }, [ingredients, isIngredientsLoading]);
 
   return (
     <>
@@ -28,6 +42,7 @@ export const ConstructorPage: FC = () => {
           </div>
         </main>
       )}
+      <Outlet />
     </>
   );
 };

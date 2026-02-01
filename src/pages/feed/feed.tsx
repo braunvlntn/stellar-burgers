@@ -1,15 +1,53 @@
 import { Preloader } from '@ui';
 import { FeedUI } from '@ui-pages';
 import { TOrder } from '@utils-types';
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
+import { Outlet } from 'react-router-dom';
+import { useDispatch, useSelector } from '../../services/store';
+import {
+  selectFeedData,
+  selectFeedLoading
+} from '../../services/feed/selectors';
+import { fetchFeed } from '../../services/feed/thunks';
+import {
+  selectIngredients,
+  selectLoading
+} from '../../services/ingredients/selectors';
+import { fetchIngredients } from '../../services/ingredients/thunks';
 
 export const Feed: FC = () => {
-  /** TODO: взять переменную из стора */
-  const orders: TOrder[] = [];
+  const dispatch = useDispatch();
 
-  if (!orders.length) {
+  const feedLoading = useSelector(selectFeedLoading);
+  const ingredientsLoading = useSelector(selectLoading);
+  const orders: TOrder[] = useSelector(selectFeedData)?.orders || [];
+  const ingredients = useSelector(selectIngredients);
+
+  useEffect(() => {
+    if (!ingredients.length && !ingredientsLoading) {
+      dispatch(fetchIngredients());
+    }
+  }, [ingredients, ingredientsLoading]);
+
+  useEffect(() => {
+    if (!orders.length && !feedLoading) {
+      dispatch(fetchFeed());
+    }
+  }, [orders, feedLoading]);
+
+  if (
+    !orders.length ||
+    feedLoading ||
+    !ingredients.length ||
+    ingredientsLoading
+  ) {
     return <Preloader />;
   }
 
-  <FeedUI orders={orders} handleGetFeeds={() => {}} />;
+  return (
+    <>
+      <FeedUI orders={orders} handleGetFeeds={() => dispatch(fetchFeed())} />
+      <Outlet />
+    </>
+  );
 };

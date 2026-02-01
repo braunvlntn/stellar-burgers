@@ -1,21 +1,37 @@
-import { FC, useMemo } from 'react';
+import { FC, useEffect, useMemo } from 'react';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
+import { useSelector } from '../../services/store';
+import {
+  selectIngredients,
+  selectLoading
+} from '../../services/ingredients/selectors';
+import {
+  selectFeedData,
+  selectFeedLoading
+} from '../../services/feed/selectors';
+import { useParams } from 'react-router-dom';
+import { selectUserOrders } from '../../services/order/selectors';
 
-export const OrderInfo: FC = () => {
-  /** TODO: взять переменные orderData и ingredients из стора */
-  const orderData = {
-    createdAt: '',
-    ingredients: [],
-    _id: '',
-    status: '',
-    name: '',
-    updatedAt: 'string',
-    number: 0
-  };
+export const OrderInfo: FC<{
+  setTitle?: (title: string) => void;
+}> = ({ setTitle }) => {
+  const { number } = useParams();
+  const feed = useSelector(selectFeedData);
+  const userOrders = useSelector(selectUserOrders);
+  const feedLoading = useSelector(selectFeedLoading);
+  const orderData =
+    feed?.orders.find((order) => order.number === Number(number)) ||
+    userOrders.find((order) => order.number === Number(number));
+  const ingredients: TIngredient[] = useSelector(selectIngredients);
+  const ingredientsLoading = useSelector(selectLoading);
 
-  const ingredients: TIngredient[] = [];
+  useEffect(() => {
+    if (orderData) {
+      setTitle?.(`Заказ ${orderData.number}`);
+    }
+  }, [orderData]);
 
   /* Готовим данные для отображения */
   const orderInfo = useMemo(() => {
@@ -59,7 +75,7 @@ export const OrderInfo: FC = () => {
     };
   }, [orderData, ingredients]);
 
-  if (!orderInfo) {
+  if (!orderInfo || !ingredients.length || ingredientsLoading || feedLoading) {
     return <Preloader />;
   }
 
