@@ -8,7 +8,7 @@ interface BurgerConstructorSliceState {
   };
 }
 
-const initialState: BurgerConstructorSliceState = {
+export const initialState: BurgerConstructorSliceState = {
   items: {
     bun: null,
     ingredients: []

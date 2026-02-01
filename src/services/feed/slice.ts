@@ -11,7 +11,7 @@ interface FeedSliceState {
   } | null;
 }
 
-const initialState: FeedSliceState = {
+export const initialState: FeedSliceState = {
   loading: false,
   data: null
 };

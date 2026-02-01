@@ -9,7 +9,7 @@ interface IngredientsSliceState {
   loading: boolean;
 }
 
-const initialState: IngredientsSliceState = {
+export const initialState: IngredientsSliceState = {
   buns: [],
   mains: [],
   sauces: [],

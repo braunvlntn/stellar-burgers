@@ -10,7 +10,7 @@ interface UserSliceState {
   loading: boolean;
 }
 
-const initialState: UserSliceState = {
+export const initialState: UserSliceState = {
   user: null,
   loading: false
 };

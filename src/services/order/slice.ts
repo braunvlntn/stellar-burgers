@@ -8,7 +8,7 @@ interface OrderSliceState {
   userOrders: TOrder[];
 }
 
-const initialState: OrderSliceState = {
+export const initialState: OrderSliceState = {
   request: false,
   modalData: null,
   userOrders: []
